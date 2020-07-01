@@ -1,46 +1,46 @@
 #!/bin/bash
 echo
-echo -e "\033[1;32m===== <<gdutils项目一件部署脚本要求及说明>> =====\033[0m"
+echo -e " \033[1;32m===== <<gdutils project deployment script requirements and instructions>> =====\033[0m "
 echo -e "\033[1;32m---------------[ v2.1 by oneking ]---------------\033[0m"
-echo -e "\033[32m 1.\033[0m 本脚本是针对TG大神@viegg的gdutils项目一键部署脚本;"
-echo -e "\033[32m 2.\033[0m 脚本包括“TD盘VPS上查询转存部署”和“Telegram机器人部署”两部分"
-echo -e "\033[32m 3.\033[0m 本脚本适应CentOS/Debian/Ubuntu三种操作系统，自动识别、自动选择对应分支一键安装部署"
-echo -e "\033[32m 4.\033[0m 三步即可完成部署：上传脚本到VPS → 设置脚本执行权限 → 运行"
-echo -e "\033[32m 5.\033[0m 在TG上注册好机器人并取得并记录下该机器人TOKEN"
-echo -e "\033[32m 6.\033[0m 拥有一个域名绑定到cloudflare解析到该机器人所在服务器IP"
+echo -e " \033[32m 1.\033[0m This script is a one-click deployment script for the TG Great God @viegg's gdutils project; "
+echo -e " \033[32m 2.\033[0m The script includes two parts: " Query Dump Deployment on TD Disk VPS" and "Telegram Robot Deployment "
+echo -e " \033[32m 3.\033[0m This script adapts to CentOS/Debian/Ubuntu three operating systems, automatically recognizes and automatically selects the corresponding branch for one-click installation and deployment "
+echo -e " \033[32m 4.\033[0m can be deployed in three steps: upload the script to VPS → set script execution permissions → run "
+echo -e " \033[32m 5.\033[0m Register the robot on TG and obtain and record the robot token "
+echo -e " \033[32m 6.\033[0m has a domain name bound to cloudflare to resolve to the server IP where the robot is located "
 echo -e "\033[1;32m------------------------------------------------\033[0m"
-read -s -n1 -p "★★★ 如已做好以上[5/6]准备或不需要安装Telegram机器人请按任意键开始部署，如未做好准备请按“Ctrl+c”终止脚本 ★★★"
+read -s -n1 -p " ★★★ If you have already prepared [5/6] above or do not need to install Telegram robot, please press any key to start deployment, if you are not ready, please press "Ctrl+c" to terminate the script ★ ★★ "
 echo
 echo -e "\033[1;32m------------------------------------------------\033[0m"
 
-# 识别操作系统
+# Identify the operating system
 aNAME="`uname -a`"
 bNAME="`cat /proc/version`"
 cNAME="`lsb_release -a`"
 if [ -f "/etc/redhat-release" ];then
 	if [[ `cat /etc/redhat-release` =~ "CentOS" ]];then
 		os="CentOS"
-	fi
+	be
 elif [ "$aNAME"=~"Debian" -o "$bNAME"=~"Debian"  -o "$cNAME"=~"Debian" ];then os="Debian"
 elif [ "$aNAME"=~"Ubuntu" -o "$bNAME"=~"Ubuntu"  -o "$cNAME"=~"Ubuntu" ];then os="Debian"
 elif [ "$aNAME"=~"CentOS" -o "$bNAME"=~"CentOS"  -o "$cNAME"=~"CentOS" ];then os="CentOS"
 elif [ "$aNAME"=~"Darwin" -o "$bNAME"=~"Darwin"  -o "$cNAME"=~"Darwin" ];then os="mac"
 else os="$bNAME"
-fi
+be
 
-# 需要安装的软件工具及依赖
+# Software tools need to be installed and dependence
 insofts=(epel-release update upgrade wget curl git unzip zip sudo python3-distutils python3 python3-pip)
 
-#根据操作系统设置变量
+#Set variables according to operating system
 if [[ "$os" = "Debian" ]];then
-    cmd_install="apt-get" #安装命令
-    cmd_install_rely="build-essential" #c++编译环境
-    nodejs_curl="https://deb.nodesource.com/setup_10.x" #nodejs下载链接
+    = cmd_install " APT-GET "  # install command
+    cmd_install_rely= " build-essential "  # c++ compilation environment
+    nodejs_curl= " https://deb.nodesource.com/setup_10.x "  # nodejs download link
     cmd_install_rpm_build="" #安装rpm-build
-    nginx_conf="/etc/nginx/sites-enabled/" #nginx配置文件存放路径
+    nginx_conf= " /etc/nginx/sites-enabled/ "  # nginx configuration file storage path
     rm_nginx_default="rm -f /etc/nginx/sites-enabled/default" #删除default
     echo
-    echo -e "\033[1;32m★★★★★ 您的操作系统为Debian，即将为你开始部署gdutils项目 ★★★★★\033[0m"
+    echo -e " \033[1;32m★★★★★ Your operating system is Debian, the gdutils project will be deployed for you soon ★★★★★\033[0m "
 elif [[ "$os" = "Ubuntu" ]];then
     cmd_install="sudo apt-get"
     cmd_install_rely="build-essential"
@@ -50,7 +50,7 @@ elif [[ "$os" = "Ubuntu" ]];then
     rm_nginx_default="rm -f /etc/nginx/sites-enabled/default"
     rm_
     echo
-    echo -e "\033[1;32m★★★★★ 您的操作系统为Ubuntu，即将为你开始部署gdutils项目 ★★★★★\033[0m"
+    echo -e " \033[1;32m★★★★★ Your operating system is Ubuntu, and the gdutils project will be deployed for you soon ★★★★★\033[0m "
 elif [[ "$os" = "CentOS" ]];then
     cmd_install="yum"
     cmd_install_rely="gcc-c++ make"
@@ -59,10 +59,10 @@ elif [[ "$os" = "CentOS" ]];then
     nginx_conf="/etc/nginx/conf.d/"
     rm_nginx_default=""
     echo
-    echo -e "\033[1;32m★★★★★ 您的操作系统为Centos，即将为你开始部署gdutils项目 ★★★★★\033[0m"
+    echo -e " \033[1;32m★★★★★ Your operating system is Centos and will soon start deploying gdutils project for you ★★★★★\033[0m "
 elif [[ "$os" = "mac" ]];then
     echo
-    echo -e "\033[1;32m★★★★★ 您的操作系统为MacOS，请在图形界面手动安装 ★★★★★\033[0m"
+    echo -e " \033[1;32m★★★★★ Your operating system is MacOS, please install it manually on the graphical interface ★★★★★\033[0m "
     exit
     echo
     echo
@@ -72,26 +72,26 @@ else
     exit
     echo
     echo
-fi
+be
 
 echo
-echo -e "\033[1;32m===== <<升级系统/更新软件/安装工具/安装依赖>> =====\033[0m"
+echo -e " \033[1;32m===== <<Upgrade system/update software/installation tools/installation dependencies>> =====\033[0m "
 echo
 
 for(( aloop=0;aloop<${#insofts[@]};aloop++ )) do
     if [ ${insofts[$aloop]} = "update" -o ${insofts[$aloop]} = "upgrade" ];then
-        echo -e "\033[1;32m“${insofts[$aloop]}”开始安装......\033[0m"
+        echo -e " \033[1;32m" ${insofts[$aloop]} "Start installation...\033[0m "
         $cmd_install ${insofts[$aloop]} -y
         echo -e "\033[1;32m------------------------------------------------\033[0m"
     else
-        echo -e "\033[1;32m“${insofts[$aloop]}”开始安装......\033[0m"
+        echo -e " \033[1;32m" ${insofts[$aloop]} "Start installation...\033[0m "
         $cmd_install install ${insofts[$aloop]} -y
         echo -e "\033[1;32m------------------------------------------------\033[0m"
-    fi
+    be
 done
 
 echo
-echo -e "\033[1;32m===== <<安装gdutils依赖-nodejs和npm/安装配置gdutils>> =====\033[0m"
+echo -e " \033[1;32m===== <<Install gdutils dependency-nodejs and npm/install configuration gdutils>> =====\033[0m "
 echo
 $cmd_install install $cmd_install_rely -y
 curl -sL $nodejs_curl | bash -
@@ -99,55 +99,55 @@ $cmd_install install nodejs -y
 $cmd_install_rpm_build
 git clone https://github.com/iwestlin/gd-utils && cd gd-utils
 npm config set unsafe-perm=true
-npm i
+asl
 
 echo
-echo -e "\033[1;32m★★★ 恭喜您!gdutils统计转存系统已经正确安装完成，请上传sa到“./gd-utils/sa/”目录下完成最后的部署 ★★★\033[0m"
+echo -e " \033[1;32m★★★ Congratulations! The gdutils statistical dump system has been installed correctly, please upload sa to the "./gd-utils/sa/" directory to complete the final deployment ★★★\ 033[0m "
 echo
 
 #################################################################################################
 
 echo -e "\033[1;32m----------------------------------------------------------\033[0m"
-read -s -n1 -p "★★★ 下面将部署Telegram机器人，请确保准备所需条件已准备好，按任意键开始部署机器人；如未做好准备请按“Ctrl+c”终止部署机器人 ★★★"
+read -s -n1 -p " ★★★ The Telegram robot will be deployed below, please make sure that the required conditions are ready, press any key to start deploying the robot; if you are not ready, press "Ctrl+c" to terminate the deployment robot ★ ★★ "
 echo
 echo -e "\033[1;32m----------------------------------------------------------\033[0m"
 
 echo
-echo -e "\033[1;32m  ===== <<开始部署gdutils查询转存TG机器人>> =====  \033[0m"
+echo -e " \033[1;32m ===== <<Start to deploy gdutils query and dump TG robot>> ===== \033[0m "
 echo
 
-#输入“机器人token/telegram账号名/WEB服务名/网址”
-read -p """请输入机器人token并回车
+# Type "robot token / telegram account name / WEB Service Name / URL"
+read -p " " " Please enter the robot token and press Enter
     Your Bot Token =>:""" YOUR_BOT_TOKEN
-#判断token是否输入正确
+# Judge token is entered correctly
 while [[ "${#YOUR_BOT_TOKEN}" != 46 ]]
     do
-    echo -e "\033[1;32m★★★ 机器人TOKEN输入不正确，请重新输入或按“Ctrl+C”结束安装！ ★★★\033[0m"
-    read -p """请输入机器人token并回车
+    echo -e " \033[1;32m★★★ The robot TOKEN input is incorrect, please re-enter or press "Ctrl+C" to end the installation! ★★★\033[0m "
+    read -p " " " Please enter the robot token and press Enter
     Your Bot Token =>:""" YOUR_BOT_TOKEN
     done 
 
-read -p """请输入在cloudflare上设置的网址(填写你的完整域名，格式：https://bot.abc.com)并回车
+read -p " " " Please enter the URL set on cloudflare (fill in your complete domain name, format: https://bot.abc.com) and press Enter
     Your Website =>:""" YOUR_WEBSITE
-#判断网址是否输入正确
+#Determine whether the URL is entered correctly
 until [[ "$YOUR_WEBSITE" =~ "https://" ]]
     do
-    echo -e "\033[1;32m★★★ 网址格式输入错误，网址应包含“http://”，请重新输入或按“Ctrl+C”结束安装！ ★★★\033[0m"
-    read -p """请输入在cloudflare上设置的网址(填写你的完整域名，格式：https://bot.abc.com)并回车
+    echo -e " \033[1;32m★★★ The URL format is entered incorrectly, the URL should contain "http://", please re-enter or press "Ctrl+C" to end the installation! ★★★\033[0m "
+    read -p " " " Please enter the URL set on cloudflare (fill in your complete domain name, format: https://bot.abc.com) and press Enter
     Your Website =>:""" YOUR_WEBSITE
     done 
 
-read -p """请为WEB服务设置一个名称(填写你的域名，格式：bot.abc.com)并回车
+read -p " " " Please set a name for the WEB service (fill in your domain name, format: bot.abc.com) and press Enter
     Your Bot Server Name =>:""" YOUR_BOT_SERVER_NAME
-#判断WEB服务名是否输入正确
+#Determine whether the WEB service name is entered correctly
 until [[ "$YOUR_WEBSITE" =~ "$YOUR_BOT_SERVER_NAME" ]]
     do
-    echo -e "\033[1;32m★★★ “Your Bot Server Name”输入错误，应该输入你在cloudflare上解析的域名且不包含“http”，请重新输入或按“Ctrl+C”结束安装！ ★★★\033[0m"
-    read -p """请为WEB服务设置一个名称(填写你的域名，格式：bot.abc.com)并回车
+    echo -e " \033[1;32m★★★ "Your Bot Server Name" is entered incorrectly, you should enter the domain name you resolved on cloudflare and does not contain "http", please re-enter or press "Ctrl+C" to end the installation ！ ★★★\033[0m "
+    read -p " " " Please set a name for the WEB service (fill in your domain name, format: bot.abc.com) and press Enter
     Your Bot Server Name =>:""" YOUR_BOT_SERVER_NAME
     done 
 
-read -p """请输入使用机器人的telegram账号名(“@”后面部分)并回车
+read -p " " " Please enter the telegram account name of the robot (the part behind "@") and press Enter
     Your Telegram Name =>:""" YOUR_TELEGRAM_NAME
 
 cd ~ && 
@@ -155,20 +155,20 @@ sed -i "s/bot_token/$YOUR_BOT_TOKEN/g" ./gd-utils/config.js
 sed -i "s/your_tg_username/$YOUR_TELEGRAM_NAME/g" ./gd-utils/config.js
 echo -e "\033[1;32m----------------------------------------------------------\033[0m"
 
-echo -e "\033[1;32m“进程守护程序pm2”开始安装......\033[0m"
+echo -e " \033[1;32m "process daemon pm2" starts installation...\033[0m "
 cd /root/gd-utils && 
 npm i pm2 -g && pm2 l
-echo -e "\033[1;32m启动守护进程......\033[0m"
+echo -e " \033[1;32m starts the daemon...\033[0m "
 pm2 start server.js
 echo -e "\033[1;32m----------------------------------------------------------\033[0m"
 
-echo -e "\033[1;32m“nginx”开始安装......\033[0m"
+echo -e " \033[1;32m "nginx" to start the installation...\033[0m "
 cd ~ && 
 $cmd_install install nginx -y
 echo   
-echo -e "\033[1;32m===== <<配置nginx服务>> ===== \033[0m"
+echo -e " \033[1;32m===== <<Configure nginx service>> ===== \033[0m "
 echo
-echo -e "\033[1;32m“nginx”起一个web服务......\033[0m"
+echo -e " \033[1;32m "nginx" starts a web service...\033[0m "
 
 cd $nginx_conf
 echo "server {
@@ -184,22 +184,22 @@ ls &&
 nginx -t &&  
 nginx -c /etc/nginx/nginx.conf && 
 nginx -s reload && 
-netstat -tulpen
+netstat tulips
 echo -e "\033[1;32m----------------------------------------------------------\033[0m"
 
-echo -e "\033[1;32m“检查网站是否部署成功”......\033[0m"
+echo -e " \033[1;32m"Check if the website is successfully deployed"...\033[0m "
 curl $YOUR_WEBSITE/api/gdurl/count\?fid=124pjM5LggSuwI1n40bcD5tQ13wS0M6wg
 echo
-echo -e "\033[1;32m设置Webhook服务......\033[0m"
+echo -e " \033[1;32m set Webhook service...\033[0m "
 print_webhook=`curl -F "url=$YOUR_WEBSITE/api/gdurl/tgbot" "https://api.telegram.org/bot$YOUR_BOT_TOKEN/setWebhook"`
 echo
 
-# 判断反向代理是否部署成功
+#Determine whether the reverse proxy is successfully deployed
 if [[ $print_webhook =~ "true" ]];then
-    echo -e "\033[1;32m★★★ 恭喜你！GoogleDrive查询转存机器人部署成功，请回到TG界面给bot发送个“/help”获取使用帮助 ★★★\033[0m"
+    echo -e " \033[1;32m★★★ Congratulations! GoogleDrive query and transfer robot deployment is successful, please return to the TG interface to send a "/help" to the bot to get help ★★★\033[0m "
 else
-    echo -e "\033[32m★★★ 很遗憾！机器人设置失败，请返回检查网站是否部署成功，并重复本安装过程 ★★★\033[0m", exit!
-fi
+    echo -e " \033[32m★★★ Unfortunately! Robot setup failed, please go back to check if the website is successfully deployed, and repeat this installation process ★★★\033[0m " , exit !
+be
 nginx -t && nginx -s reload
 echo
 echo
@@ -207,15 +207,15 @@ echo
 cd ~
 rm -f gdutilsinstall_other.sh
 
-###########################gdutils功能建议##################################
-# 本部分是对gdutils项目的建议，因为我主要用的是查询功能所以以下建议只涉及查询功能
-# 1-把以下参数放入配置文件设置：sa存放路径
-# 2-改sa“随机”使用为“顺序”分组使用；
-# 3-增加输出模式，可以用命令行后带参数选择，具体模式建议：
-#   ①按一级或者二级文件夹显示数量大小
-#   ②可以一次性统计多个磁盘并且输出单个磁盘文件数和大小以及几个磁盘总和
-#   ③获取id对应的文件夹名或者磁盘明保存数据库，给个命令能够查询历史记录汇总或者指定汇总
-# 4-查询过程中输出方式不要每次都输出一次，可以固定+数字变化
-# 5-命令参数可加在ID前或后，如果非要固定一种的话就加在ID之前
-# 6-命令行也改为默认sa模式
+# #########################gdutilsFeature suggestion#################### ##############
+# This section is recommended for gdutils project because I mainly use the search function so the following is recommended only involves inquiry
+# 1- Put the following parameters in the configuration file settings: sa storage path
+# 2- Change sa "random" use to "sequential" group use;
+# 3- Increase the output mode, you can use the command line with parameters to choose, the specific mode is recommended:
+#    ① According to the first or second folder display the number size
+#    ②Can count multiple disks at one time and output the number and size of files on a single disk and the sum of several disks
+#    ③ Get the folder name corresponding to the id or the disk to save the database, and give a command to query the historical record summary or the specified summary
+# 4-During the query process, the output method should not be output every time, but can be fixed + number change
+# 5- Command parameters can be added before or after the ID, if it is necessary to fix one, it is added before the ID
+# 6- The command line is also changed to the default sa mode
 ############################################################################
